@@ -20,6 +20,7 @@ public class DetailView extends StackPane implements Subscriber {
         gc = myCan.getGraphicsContext2D();
         getChildren().add(myCan);
 
+
         widthProperty().addListener((observable, oldValue, newValue) -> {
             myCan.setWidth(newValue.doubleValue());
             draw();
@@ -28,6 +29,7 @@ public class DetailView extends StackPane implements Subscriber {
             myCan.setHeight(newValue.doubleValue());
             draw();
         });
+        setFocusTraversable(true);
     }
 
     public void setModel(EntityModel mdl) {
@@ -57,5 +59,6 @@ public class DetailView extends StackPane implements Subscriber {
         setOnMousePressed(ctrlr::handlePressed);
         setOnMouseReleased(ctrlr::handleReleased);
         setOnMouseDragged(ctrlr::handleDrag);
+        setOnKeyPressed(ctrlr::handleKeyPress);
     }
 }

@@ -20,6 +20,10 @@ public class EntityModel {
         boxLst.add(b);
         notifySubscribers();
     }
+    public void removeObject(Box b) {
+        boxLst.remove(b);
+        notifySubscribers();
+    }
 
     public ArrayList<Box> getObjects() {
         return boxLst;

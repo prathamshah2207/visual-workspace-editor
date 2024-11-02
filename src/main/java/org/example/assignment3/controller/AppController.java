@@ -1,6 +1,6 @@
 package org.example.assignment3.controller;
 
-import javafx.scene.input.MouseEvent;
+import javafx.scene.input.*;
 import org.example.assignment3.model.EntityModel;
 import org.example.assignment3.model.InteractionModel;
 
@@ -29,11 +29,13 @@ public class AppController {
                 x = event.getX();
                 y = event.getY();
 
+                // this will get triggered when click is on an existing box to move it
                 if (model.contains(x, y)) {
                     imodel.setSelected(model.whichObject(x, y));
                     model.notifySubscribers();
                     currentState = State.MOVING;
                 }
+                // this wil start creating a new box
                 else {
                     imodel.setSelected(null);
                     imodel.setSelected(model.makeObject(x, y));
@@ -42,25 +44,24 @@ public class AppController {
                     currentState = State.PREPARE_CREATE;
                 }
         }
-        System.out.println("Mouse Pressed");
+//        System.out.println("Mouse Pressed");
     }
 
     public void handleReleased(MouseEvent event) {
         switch (currentState) {
             case PREPARE_CREATE:
-                model.addObject(imodel.getSelected());
                 currentState = State.READY;
             case MOVING:
                 currentState = State.READY;
         }
-        System.out.println("Mouse Released");
+//        System.out.println("Mouse Released");
     }
 
     public void handleDrag(MouseEvent event) {
-        System.out.println(currentState);
+//        System.out.println(currentState);
         switch (currentState) {
             case PREPARE_CREATE:
-
+                // will create a box while updating its width and height so the box will grow or shrink as per mouse dragging
                 double dWitdh = Math.abs(event.getX() - x);
                 double dHeight = Math.abs(event.getY() - y);
                 imodel.getSelected().setDims(dWitdh, dHeight);
@@ -68,6 +69,7 @@ public class AppController {
                 break;
 
             case MOVING:
+                // simply will move the box with the cursors position
                 dX = event.getX() - x;
                 dY = event.getY() - y;
                 x = event.getX();
@@ -77,5 +79,16 @@ public class AppController {
                 break;
         }
 //        System.out.println("Mouse Drag");
+    }
+
+    public void handleKeyPress(KeyEvent event) {
+//        System.out.println("Delete");
+        if (event.getCode() == KeyCode.DELETE || event.getCode() == KeyCode.BACK_SPACE) {
+            if (imodel.getSelected() != null) {
+                model.removeObject(imodel.getSelected());
+                imodel.setSelected(null);
+                model.notifySubscribers();
+            }
+        }
     }
 }

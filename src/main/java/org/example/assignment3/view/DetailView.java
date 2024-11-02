@@ -4,7 +4,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import org.example.assignment3.InteractionModel;
+import org.example.assignment3.model.InteractionModel;
 import org.example.assignment3.controller.AppController;
 import org.example.assignment3.model.EntityModel;
 import org.example.assignment3.model.Subscriber;

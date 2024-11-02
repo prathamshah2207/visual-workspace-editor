@@ -1,5 +1,6 @@
 package org.example.assignment3.model;
 import java.util.ArrayList;
+import java.util.List;
 
 public class EntityModel {
     private ArrayList<Subscriber> subsLst;

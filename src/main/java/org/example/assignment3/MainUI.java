@@ -1,6 +1,11 @@
 package org.example.assignment3;
+import org.example.assignment3.InteractionModel;
+import org.example.assignment3.controller.AppController;
+import org.example.assignment3.model.EntityModel;
+
 
 import javafx.scene.layout.StackPane;
+import org.example.assignment3.view.DetailView;
 
 public class MainUI extends StackPane {
     public MainUI() {

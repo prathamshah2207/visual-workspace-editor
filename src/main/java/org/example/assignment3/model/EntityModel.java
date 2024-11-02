@@ -1,9 +1,5 @@
-package org.example.assignment3;
-
-import javax.swing.text.html.parser.Entity;
+package org.example.assignment3.model;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Flow;
 
 public class EntityModel {
     private ArrayList<Subscriber> subsLst;

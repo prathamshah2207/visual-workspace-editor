@@ -1,7 +1,7 @@
 package org.example.assignment3.model;
 
 public class InteractionModel {
-    Box selected;
+    private Box selected;
 
     public InteractionModel() {
         selected = null;

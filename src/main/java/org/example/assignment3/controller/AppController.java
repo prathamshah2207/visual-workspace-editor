@@ -29,11 +29,15 @@ public class AppController {
                 x = event.getX();
                 y = event.getY();
 
-                if (model.contains(event.getX(), event.getY())) {
-                    imodel.setSelected(model.whichObject(event.getX(), event.getY()));
+                if (model.contains(x, y)) {
+                    imodel.setSelected(model.whichObject(x, y));
                     currentState = State.MOVING;
                 }
                 else {
+                    imodel.setSelected(null);
+                    imodel.setSelected(model.makeObject(x, y));
+                    model.addObject(imodel.getSelected());
+
                     currentState = State.PREPARE_CREATE;
                 }
         }
@@ -43,6 +47,7 @@ public class AppController {
     public void handleReleased(MouseEvent event) {
         switch (currentState) {
             case PREPARE_CREATE:
+                model.addObject(imodel.getSelected());
                 currentState = State.READY;
             case MOVING:
                 currentState = State.READY;
@@ -51,16 +56,25 @@ public class AppController {
     }
 
     public void handleDrag(MouseEvent event) {
+        System.out.println(currentState);
         switch (currentState) {
             case PREPARE_CREATE:
-                model.addObject(event.getX(), event.getY());
+
+                double dWitdh = Math.abs(event.getX() - x);
+                double dHeight = Math.abs(event.getY() - y);
+                imodel.getSelected().setDims(dWitdh, dHeight);
+                model.notifySubscribers();
+                break;
+
             case MOVING:
                 dX = event.getX() - x;
                 dY = event.getY() - y;
                 x = event.getX();
                 y = event.getY();
                 model.moveObject(imodel.getSelected(), dX, dY);
+                model.notifySubscribers();
+                break;
         }
-        System.out.println("Mouse Drag");
+//        System.out.println("Mouse Drag");
     }
 }

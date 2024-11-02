@@ -1,6 +1,5 @@
 package org.example.assignment3.model;
 import java.util.ArrayList;
-import java.util.List;
 
 public class EntityModel {
     private ArrayList<Subscriber> subsLst;
@@ -11,8 +10,14 @@ public class EntityModel {
         boxLst = new ArrayList<>();
     }
 
-    public void addObject(double x, double y) {
-        boxLst.add(new Box(x, y));
+    public Box makeObject(double x, double y) {
+        Box box = new Box(x, y);
+        notifySubscribers();
+        return box;
+    }
+
+    public void addObject(Box b) {
+        boxLst.add(b);
         notifySubscribers();
     }
 
@@ -20,9 +25,11 @@ public class EntityModel {
         return boxLst;
     }
 
-    public void moveObject(Box bx, double dx, double dy) {
-        bx.move(dx, dy);
-        notifySubscribers();
+    public void moveObject(Box b, double dx, double dy) {
+        if (boxLst.contains(b)) {
+            b.move(dx, dy);
+            notifySubscribers();
+        }
     }
 
     public Box whichObject(double x, double y) {

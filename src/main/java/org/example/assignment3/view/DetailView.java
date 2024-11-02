@@ -31,9 +31,9 @@ public class DetailView extends StackPane implements Subscriber {
     }
     public void draw() {
         gc.clearRect(0, 0, width, hieght);
-        model.getEntities().forEach(ntt -> {
+        model.getObjects().forEach(bx -> {
             gc.setFill(Color.BLUE);
-            gc.fillOval(ntt.getX() - ntt.getR(), ntt.getY() - ntt.getR(), ntt.getR() *2, ntt.getR() *2);
+            gc.fillOval(bx.getX() - bx.getR(), bx.getY() - bx.getR(), bx.getR() *2, bx.getR() *2);
         });
     }
     public void modelChanged() {
@@ -43,6 +43,6 @@ public class DetailView extends StackPane implements Subscriber {
     public void setupEvents(AppController ctrlr) {
         setOnMousePressed(ctrlr::handlePressed);
         setOnMouseReleased(ctrlr::handleReleased);
-        setOnMouseDragged(ctrlr::handledDragged);
+        setOnMouseDragged(ctrlr::handleDrag);
     }
 }

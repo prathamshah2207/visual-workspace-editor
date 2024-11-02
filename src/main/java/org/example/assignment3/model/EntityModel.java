@@ -4,29 +4,29 @@ import java.util.List;
 
 public class EntityModel {
     private ArrayList<Subscriber> subsLst;
-    private ArrayList<Entity> entitsLst;
+    private ArrayList<Box> boxLst;
 
     public EntityModel() {
         subsLst = new ArrayList<>();
-        entitsLst = new ArrayList<>();
+        boxLst = new ArrayList<>();
     }
 
-    public void addEntity(double x, double y) {
-        entitsLst.add(new Entity(x, y));
+    public void addObject(double x, double y) {
+        boxLst.add(new Box(x, y));
         notifySubscribers();
     }
 
-    public List<Entity> getEntities() {
-        return entitsLst;
+    public ArrayList<Box> getObjects() {
+        return boxLst;
     }
 
-    public void moveEntity(Entity ntt, double dx, double dy) {
-        ntt.move(dx, dy);
+    public void moveObject(Box bx, double dx, double dy) {
+        bx.move(dx, dy);
         notifySubscribers();
     }
 
-    public Entity whichEntity(double x, double y) {
-        return entitsLst.stream().filter(e -> e.contains(x,y)).findFirst().orElse(null);
+    public Box whichObject(double x, double y) {
+        return boxLst.stream().filter(e -> e.contains(x,y)).findFirst().orElse(null);
     }
 
     public void notifySubscribers() {
@@ -36,6 +36,6 @@ public class EntityModel {
         subsLst.add(s);
     }
     public boolean contains(double x, double y) {
-        return entitsLst.stream().anyMatch(e -> e.contains(x,y));
+        return boxLst.stream().anyMatch(e -> e.contains(x,y));
     }
 }

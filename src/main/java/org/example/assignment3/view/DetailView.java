@@ -10,17 +10,24 @@ import org.example.assignment3.model.EntityModel;
 import org.example.assignment3.model.Subscriber;
 
 public class DetailView extends StackPane implements Subscriber {
-    double hieght, width;
+    Canvas myCan;
     GraphicsContext gc;
     EntityModel model;
     InteractionModel imodel;
 
     public DetailView() {
-        hieght = 600;
-        width = 800;
-        Canvas myCan = new Canvas(width, hieght);
+        myCan = new Canvas();
         gc = myCan.getGraphicsContext2D();
         getChildren().add(myCan);
+
+        widthProperty().addListener((observable, oldValue, newValue) -> {
+            myCan.setWidth(newValue.doubleValue());
+            draw();
+        });
+        heightProperty().addListener((observable, oldValue, newValue) -> {
+            myCan.setHeight(newValue.doubleValue());
+            draw();
+        });
     }
 
     public void setModel(EntityModel mdl) {
@@ -30,7 +37,7 @@ public class DetailView extends StackPane implements Subscriber {
         imodel = imdl;
     }
     public void draw() {
-        gc.clearRect(0, 0, width, hieght);
+        gc.clearRect(0, 0, myCan.getWidth(), myCan.getHeight());
 
         model.getObjects().forEach(bx -> {
             if (imodel.getSelected() == bx) {

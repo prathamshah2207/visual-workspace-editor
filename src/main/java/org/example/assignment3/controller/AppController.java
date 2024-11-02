@@ -31,6 +31,7 @@ public class AppController {
 
                 if (model.contains(x, y)) {
                     imodel.setSelected(model.whichObject(x, y));
+                    model.notifySubscribers();
                     currentState = State.MOVING;
                 }
                 else {

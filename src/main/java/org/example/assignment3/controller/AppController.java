@@ -11,6 +11,7 @@ public class AppController {
     private double x, y, dX, dY;
     private EntityModel model;
     private InteractionModel imodel;
+    boolean pan = false;
 
     public AppController() {
         currentState = State.READY;
@@ -24,6 +25,7 @@ public class AppController {
     }
 
 
+    // this functioon will check if mouse click was on the miniview or not
     public boolean clickInMini(double x, double y) {
         return x >=0 && x<= 210 && y >=0 && y<=210;
     }
@@ -36,14 +38,17 @@ public class AppController {
 
         if (event.isShiftDown()) {
             currentState = State.PANNING;
+            pan = true;
         }
         else if (clickInMini(x,y ) == true) {
             x *= 10;
             y *= 10;
+            pan=false;
         }
         else {
             x+= model.getViewLeft();
             y+= model.getViewTop();
+            pan=false;
         }
 
         switch (currentState) {
@@ -92,13 +97,14 @@ public class AppController {
         double eX = event.getX();
         double eY = event.getY();
 
-        if (clickInMini(eX, eY) == true) {
-            eX *= 10;
-            eY *= 10;
-        }
-        else{
-            eX += model.getViewLeft();
-            eY += model.getViewTop();
+        if (pan == false) {
+            if (clickInMini(eX, eY) == true) {
+                eX *= 10;
+                eY *= 10;
+            } else {
+                eX += model.getViewLeft();
+                eY += model.getViewTop();
+            }
         }
 
 //        System.out.println(currentState);
@@ -121,8 +127,9 @@ public class AppController {
                 model.notifySubscribers();
                 break;
 
+            // this will make the canvas move around for looking at different parts of world
             case PANNING:
-                dX = eX - x;
+                dX = (eX) - x;
                 dY = eY - y;
                 x = eX;
                 y = eY;

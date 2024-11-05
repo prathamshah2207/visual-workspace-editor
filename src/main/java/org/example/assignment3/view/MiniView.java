@@ -12,19 +12,23 @@ public class MiniView extends DetailView{
     }
 
     public void draw(){
+        // the background
         gc.clearRect(0, 0, miniSz, miniSz);
         gc.setFill(Color.LIGHTGRAY);
+        gc.setGlobalAlpha(0.8);
         gc.fillRect(0, 0, miniSz, miniSz);
 
-        gc.setStroke(Color.GREEN);
-        gc.setLineWidth(1);
-        gc.strokeRect(model.getViewLeft() * (miniSz / world), model.getViewTop() * (miniSz / world), model.getViewWidth() * (miniSz / world), model.getViewHeight() * (miniSz / world));
+        //thi is the viewport view in miniview
+        gc.setFill(Color.LIMEGREEN);
+        gc.fillRect(model.getViewLeft() * (miniSz / world), model.getViewTop() * (miniSz / world), model.getViewWidth() * (miniSz / world), model.getViewHeight() * (miniSz / world));
 
 
+        // border
         gc.setStroke(Color.BLACK);
         gc.setLineWidth(1);
         gc.strokeRect(0, 0, miniSz, miniSz);
-        
+
+        // each box inide the miniview
         model.getObjects().forEach(minibox -> {
             if (imodel.getSelected() == minibox) {
                 gc.setFill(Color.ORANGE);

@@ -36,6 +36,13 @@ public class EntityModel {
     public void setViewHeight(double vH) {
         viewHeight = vH;
     }
+    public double getViewWidth(){
+        return viewWidth;
+    }
+    public double getViewHeight(){
+        return viewHeight;
+    }
+
     public void panView(double dX, double dY) {
         viewLeft = Math.max(0, Math.min(world - viewWidth, viewLeft - dX));
         viewTop = Math.max(0, Math.min(world - viewHeight, viewTop - dY));
@@ -43,7 +50,7 @@ public class EntityModel {
     }
 
     public Box makeObject(double x, double y) {
-        Box box = new Box(x+viewLeft, y+viewTop);
+        Box box = new Box(x, y);
         notifySubscribers();
         return box;
     }

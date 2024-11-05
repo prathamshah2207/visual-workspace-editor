@@ -23,40 +23,44 @@ public class AppController {
         imodel = imdl;
     }
 
-    public boolean clickInMiniView(double x, double y) {
-        return x >= model.getViewLeft() && x <= model.getViewLeft()+200 && y >= model.getViewTop() && y <= model.getViewTop()+200;
+
+    public boolean clickInMini(double x, double y) {
+        return x >=0 && x<= 210 && y >=0 && y<=210;
     }
+
 
     public void handlePressed(MouseEvent event) {
 
+        x = event.getX();
+        y=event.getY();
+
         if (event.isShiftDown()) {
-            x = event.getX();
-            y = event.getY();
             currentState = State.PANNING;
+        }
+        else if (clickInMini(x,y ) == true) {
+            x *= 10;
+            y *= 10;
+        }
+        else {
+            x+= model.getViewLeft();
+            y+= model.getViewTop();
         }
 
         switch (currentState) {
+
             case READY:
-                x = event.getX();
-                y = event.getY();
-
-
-                if (clickInMiniView(x, y) == true) {
-                    x *= 10;
-                    y *= 10;
-                }
-
                 // this will get triggered when click is on an existing box to move it
-                if (model.contains(x, y)) {
-                    imodel.setSelected(model.whichObject(x, y));
+                if (model.contains(x,y)) {
+                    imodel.setSelected(model.whichObject(x,y));
                     model.notifySubscribers();
                     currentState = State.MOVING;
                 }
                 // this wil start creating a new box
                 else {
                     imodel.setSelected(null);
-                    imodel.setSelected(model.makeObject(x, y));
+                    imodel.setSelected(model.makeObject(x,y));
                     model.addObject(imodel.getSelected());
+                    model.notifySubscribers();
 
                     currentState = State.PREPARE_CREATE;
                 }
@@ -68,7 +72,7 @@ public class AppController {
 
         double eX = event.getX();
         double eY = event.getY();
-        if (clickInMiniView(eX, eY) == true) {
+        if (clickInMini(eX, eY) == true) {
             eX *= 10;
             eY *= 10;
         }
@@ -76,6 +80,8 @@ public class AppController {
             case PREPARE_CREATE:
                 currentState = State.READY;
             case MOVING:
+                currentState = State.READY;
+            case PANNING:
                 currentState = State.READY;
         }
 //        System.out.println("Mouse Released");
@@ -86,16 +92,21 @@ public class AppController {
         double eX = event.getX();
         double eY = event.getY();
 
-        if (clickInMiniView(eX, eY) == true) {
+        if (clickInMini(eX, eY) == true) {
             eX *= 10;
             eY *= 10;
         }
+        else{
+            eX += model.getViewLeft();
+            eY += model.getViewTop();
+        }
+
 //        System.out.println(currentState);
         switch (currentState) {
             case PREPARE_CREATE:
                 // will create a box while updating its width and height so the box will grow or shrink as per mouse dragging
-                double dWitdh = Math.abs(eX - x);
-                double dHeight = Math.abs(eY - y);
+                double dWitdh = eX - x;
+                double dHeight = eY - y;
                 imodel.getSelected().setDims(dWitdh, dHeight);
                 model.notifySubscribers();
                 break;

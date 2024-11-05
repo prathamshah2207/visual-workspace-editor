@@ -39,16 +39,19 @@ public class DetailView extends Pane implements Subscriber {
 
         model.getObjects().forEach(bx -> {
 
+            double X = bx.getX() - model.getViewLeft();
+            double Y = bx.getY() - model.getViewTop();
+
             if (imodel.getSelected() == bx) {
             gc.setFill(Color.ORANGE);
             }
             else {
                 gc.setFill(Color.BLUE);
             }
-            gc.fillRect(bx.getX(), bx.getY(), bx.getWidth(), bx.getHeight());
+            gc.fillRect(X,Y, bx.getWidth(), bx.getHeight());
             gc.setStroke(Color.BLACK);
             gc.setLineWidth(1);
-            gc.strokeRect(bx.getX(), bx.getY(), bx.getWidth(), bx.getHeight());
+            gc.strokeRect(X,Y, bx.getWidth(), bx.getHeight());
         });
 
         model.setViewHeight(getHeight());

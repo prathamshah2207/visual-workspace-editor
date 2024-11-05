@@ -23,11 +23,21 @@ public class AppController {
         imodel = imdl;
     }
 
+    public boolean clickInMiniView(double x, double y) {
+        return x >= model.getViewLeft() && x <= model.getViewLeft()+200 && y >= model.getViewTop() && y <= model.getViewTop()+200;
+    }
+
     public void handlePressed(MouseEvent event) {
         switch (currentState) {
             case READY:
                 x = event.getX();
                 y = event.getY();
+
+
+                if (clickInMiniView(x, y) == true) {
+                    x *= 10;
+                    y *= 10;
+                }
 
                 // this will get triggered when click is on an existing box to move it
                 if (model.contains(x, y)) {
@@ -48,6 +58,13 @@ public class AppController {
     }
 
     public void handleReleased(MouseEvent event) {
+
+        double eX = event.getX();
+        double eY = event.getY();
+        if (clickInMiniView(eX, eY) == true) {
+            eX *= 10;
+            eY *= 10;
+        }
         switch (currentState) {
             case PREPARE_CREATE:
                 currentState = State.READY;
@@ -58,22 +75,30 @@ public class AppController {
     }
 
     public void handleDrag(MouseEvent event) {
+
+        double eX = event.getX();
+        double eY = event.getY();
+
+        if (clickInMiniView(eX, eY) == true) {
+            eX *= 10;
+            eY *= 10;
+        }
 //        System.out.println(currentState);
         switch (currentState) {
             case PREPARE_CREATE:
                 // will create a box while updating its width and height so the box will grow or shrink as per mouse dragging
-                double dWitdh = Math.abs(event.getX() - x);
-                double dHeight = Math.abs(event.getY() - y);
+                double dWitdh = Math.abs(eX - x);
+                double dHeight = Math.abs(eY - y);
                 imodel.getSelected().setDims(dWitdh, dHeight);
                 model.notifySubscribers();
                 break;
 
             case MOVING:
                 // simply will move the box with the cursors position
-                dX = event.getX() - x;
-                dY = event.getY() - y;
-                x = event.getX();
-                y = event.getY();
+                dX = eX - x;
+                dY = eY - y;
+                x = eX;
+                y = eY;
                 model.moveObject(imodel.getSelected(), dX, dY);
                 model.notifySubscribers();
                 break;

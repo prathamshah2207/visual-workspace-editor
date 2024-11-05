@@ -3,19 +3,21 @@ package org.example.assignment3.view;
 import javafx.scene.paint.Color;
 
 public class MiniView extends DetailView{
-
-    private double worldSz = 2000;
+    
     private double miniSz = 200;
 
     public MiniView(){
-        myCan.setWidth(worldSz);
-        myCan.setHeight(worldSz);
+        myCan.setWidth(world);
+        myCan.setHeight(world);
     }
 
     public void draw(){
-        gc.clearRect(0, 0, worldSz, worldSz);
+        gc.clearRect(model.getViewLeft(), model.getViewTop(), model.getViewLeft()+ miniSz, model.getViewTop() + miniSz);
         gc.setFill(Color.LIGHTGRAY);
-        gc.fillRect(0, 0, miniSz, miniSz);
+        gc.fillRect(model.getViewLeft(), model.getViewTop(), model.getViewLeft()+ miniSz, model.getViewTop() + miniSz);
+        gc.setStroke(Color.BLACK);
+        gc.setLineWidth(1);
+        gc.strokeRect(model.getViewLeft(), model.getViewTop(), model.getViewLeft()+ miniSz, model.getViewTop() + miniSz);
         
         model.getObjects().forEach(minibox -> {
             if (imodel.getSelected() == minibox) {
@@ -25,10 +27,10 @@ public class MiniView extends DetailView{
                 gc.setFill(Color.BLUE);
             }
 
-            double relativeX = minibox.getX()*miniSz / worldSz;
-            double relativeY = minibox.getY()*miniSz / worldSz;
-            double relativeWidth = minibox.getWidth()*miniSz / worldSz;
-            double relativeHeight = minibox.getHeight()*miniSz / worldSz;
+            double relativeX = minibox.getX()*miniSz / world;
+            double relativeY = minibox.getY()*miniSz / world;
+            double relativeWidth = minibox.getWidth()*miniSz / world;
+            double relativeHeight = minibox.getHeight()*miniSz / world;
 
             gc.fillRect(relativeX, relativeY, relativeWidth, relativeHeight);
             gc.setStroke(Color.BLACK);

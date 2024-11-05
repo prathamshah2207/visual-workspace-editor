@@ -3,7 +3,6 @@ package org.example.assignment3.view;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import org.example.assignment3.model.InteractionModel;
 import org.example.assignment3.controller.AppController;
@@ -17,8 +16,6 @@ public class DetailView extends Pane implements Subscriber {
     EntityModel model;
     InteractionModel imodel;
     double world = 2000;
-    double viewLeft = 0;
-    double viewTop = 0;
 
     public DetailView() {
         myCan = new Canvas(world, world);

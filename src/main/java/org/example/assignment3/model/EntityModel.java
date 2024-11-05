@@ -5,9 +5,27 @@ public class EntityModel {
     private ArrayList<Subscriber> subsLst;
     private ArrayList<Box> boxLst;
 
+    private double viewLeft;
+    private double viewTop;
+
     public EntityModel() {
         subsLst = new ArrayList<>();
         boxLst = new ArrayList<>();
+        viewLeft = 0;
+        viewTop = 0;
+    }
+
+    public double getViewLeft() {
+        return viewLeft;
+    }
+    public void setViewLeft(double viewLeft) {
+        this.viewLeft = viewLeft;
+    }
+    public double getViewTop() {
+        return viewTop;
+    }
+    public void setViewTop(double viewTop) {
+        this.viewTop = viewTop;
     }
 
     public Box makeObject(double x, double y) {

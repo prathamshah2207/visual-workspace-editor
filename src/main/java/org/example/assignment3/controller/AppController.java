@@ -41,13 +41,13 @@ public class AppController {
             pan = true;
         }
         else if (clickInMini(x,y ) == true) {
-            x *= 10;
             y *= 10;
+            x *= 10;
             pan=false;
         }
         else {
-            x+= model.getViewLeft();
             y+= model.getViewTop();
+            x+= model.getViewLeft();
             pan=false;
         }
 
@@ -98,12 +98,14 @@ public class AppController {
         double eY = event.getY();
 
         if (pan == false) {
-            if (clickInMini(eX, eY) == true) {
-                eX *= 10;
-                eY *= 10;
-            } else {
+            if (clickInMini(eX, eY) == false) {
                 eX += model.getViewLeft();
                 eY += model.getViewTop();
+            }
+            else {
+
+                eX *= 10;
+                eY *= 10;
             }
         }
 

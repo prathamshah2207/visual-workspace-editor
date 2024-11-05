@@ -6,7 +6,7 @@ import org.example.assignment3.model.InteractionModel;
 
 public class AppController {
 
-    private enum State {READY, MOVING, PREPARE_CREATE}
+    private enum State {READY, MOVING, PREPARE_CREATE, PANNING}
     private State currentState;
     private double x, y, dX, dY;
     private EntityModel model;
@@ -28,6 +28,13 @@ public class AppController {
     }
 
     public void handlePressed(MouseEvent event) {
+
+        if (event.isShiftDown()) {
+            x = event.getX();
+            y = event.getY();
+            currentState = State.PANNING;
+        }
+
         switch (currentState) {
             case READY:
                 x = event.getX();
@@ -100,6 +107,16 @@ public class AppController {
                 x = eX;
                 y = eY;
                 model.moveObject(imodel.getSelected(), dX, dY);
+                model.notifySubscribers();
+                break;
+
+            case PANNING:
+                dX = eX - x;
+                dY = eY - y;
+                x = eX;
+                y = eY;
+
+                model.panView(dX, dY);
                 model.notifySubscribers();
                 break;
         }

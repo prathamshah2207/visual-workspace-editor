@@ -50,6 +50,9 @@ public class DetailView extends Pane implements Subscriber {
             gc.setLineWidth(1);
             gc.strokeRect(bx.getX(), bx.getY(), bx.getWidth(), bx.getHeight());
         });
+
+        model.setViewHeight(getHeight());
+        model.setViewWidth(getWidth());
     }
     public void modelChanged() {
         draw();

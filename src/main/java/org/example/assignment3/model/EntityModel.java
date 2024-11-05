@@ -7,6 +7,9 @@ public class EntityModel {
 
     private double viewLeft;
     private double viewTop;
+    private double viewWidth = 0;
+    private double viewHeight = 0;
+    private double world = 2000;
 
     public EntityModel() {
         subsLst = new ArrayList<>();
@@ -27,9 +30,20 @@ public class EntityModel {
     public void setViewTop(double viewTop) {
         this.viewTop = viewTop;
     }
+    public void setViewWidth(double vW) {
+        viewWidth = vW;
+    }
+    public void setViewHeight(double vH) {
+        viewHeight = vH;
+    }
+    public void panView(double dX, double dY) {
+        viewLeft = Math.max(0, Math.min(world - viewWidth, viewLeft - dX));
+        viewTop = Math.max(0, Math.min(world - viewHeight, viewTop - dY));
+        notifySubscribers();
+    }
 
     public Box makeObject(double x, double y) {
-        Box box = new Box(x, y);
+        Box box = new Box(x+viewLeft, y+viewTop);
         notifySubscribers();
         return box;
     }

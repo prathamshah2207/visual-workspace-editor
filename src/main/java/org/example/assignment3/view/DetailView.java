@@ -16,6 +16,7 @@ public class DetailView extends Pane implements Subscriber {
     EntityModel model;
     InteractionModel imodel;
     double world = 2000;
+    double edge=4.2;
 
     public DetailView() {
         myCan = new Canvas(world, world);
@@ -41,17 +42,32 @@ public class DetailView extends Pane implements Subscriber {
 
             double X = bx.getX() - model.getViewLeft();
             double Y = bx.getY() - model.getViewTop();
-
             if (imodel.getSelected() == bx) {
-            gc.setFill(Color.ORANGE);
+
+                gc.setFill(Color.ORANGE);
             }
             else {
                 gc.setFill(Color.BLUE);
             }
+
             gc.fillRect(X,Y, bx.getWidth(), bx.getHeight());
             gc.setStroke(Color.BLACK);
             gc.setLineWidth(1);
             gc.strokeRect(X,Y, bx.getWidth(), bx.getHeight());
+
+            if (imodel.getSelected() == bx) {
+                gc.setFill(Color.WHITE);
+                gc.fillOval(X- edge, Y-edge, edge*2, edge*2);
+                gc.fillOval(X- edge+bx.getWidth(), Y-edge+bx.getHeight(), edge*2, edge*2);
+                gc.fillOval(X- edge, Y-edge+bx.getHeight(), edge*2, edge*2);
+                gc.fillOval(X- edge+bx.getWidth(), Y-edge, edge*2, edge*2);
+
+                gc.strokeOval(X- edge, Y-edge, edge*2, edge*2);
+                gc.strokeOval(X- edge+bx.getWidth(), Y-edge+bx.getHeight(), edge*2, edge*2);
+                gc.strokeOval(X- edge, Y-edge+bx.getHeight(), edge*2, edge*2);
+                gc.strokeOval(X- edge+bx.getWidth(), Y-edge, edge*2, edge*2);
+            }
+
         });
 
         model.setViewHeight(getHeight());

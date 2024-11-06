@@ -15,7 +15,7 @@ public class MiniView extends DetailView{
         // the background
         gc.clearRect(0, 0, miniSz, miniSz);
         gc.setFill(Color.LIGHTGRAY);
-        gc.setGlobalAlpha(0.8);
+        gc.setGlobalAlpha(0.82);
         gc.fillRect(0, 0, miniSz, miniSz);
 
         //thi is the viewport view in miniview

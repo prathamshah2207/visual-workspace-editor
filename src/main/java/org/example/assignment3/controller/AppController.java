@@ -8,7 +8,7 @@ public class AppController {
 
     private enum State {READY, MOVING, PREPARE_CREATE, RESIZING, PANNING}
     private State currentState;
-    private double x, y, dX, dY;
+    private double x, y, dX, dY, refX, refY;
     private EntityModel model;
     private InteractionModel imodel;
     boolean pan = false;
@@ -74,19 +74,34 @@ public class AppController {
                     double hBoc =  imodel.getSelected().getHeight();
 
                     //top-left
-                    if(isClickOnEdge(x, y, xBox, yBox))
+                    if(isClickOnEdge(x, y, xBox, yBox)) {
+                        refX = xBox + wBox;
+                        refY = yBox +hBoc;
                         edgeMode = 1;
+                    }
                     //top-right
-                    else if(isClickOnEdge(x, y, xBox + wBox, yBox))
+                    else if(isClickOnEdge(x, y, xBox + wBox, yBox)) {
+                        refX = xBox;
+                        refY = yBox+hBoc;
                         edgeMode = 2;
+                    }
                     //bottom-left
-                    else if(isClickOnEdge(x, y, xBox, yBox+hBoc))
+                    else if(isClickOnEdge(x, y, xBox, yBox+hBoc)) {
+                        refX = xBox + wBox;
+                        refY = yBox;
                         edgeMode = 3;
+                    }
                     //bottomright
-                    else if(isClickOnEdge(x, y, xBox+wBox, yBox + hBoc))
-                        edgeMode=4;
-                    else
-                        edgeMode=0;
+                    else if(isClickOnEdge(x, y, xBox+wBox, yBox + hBoc)) {
+                        refX = xBox;
+                        refY = yBox;
+                        edgeMode = 4;
+                    }
+                    else {
+                        refX = 0;
+                        refY = 0;
+                        edgeMode = 0;
+                    }
                 }
 
                 if (edgeMode != 0){
@@ -203,61 +218,92 @@ public class AppController {
                 break;
 
             case RESIZING:
-
-                double xBox =  imodel.getSelected().getX();
-                double yBox =  imodel.getSelected().getY();
-                double wBox =  imodel.getSelected().getWidth();
-                double hBoc =  imodel.getSelected().getHeight();
-
                 double nWidth, nHieght, newX, newY;
 
                 //top-left
                 if (edgeMode == 1) {
-                    if (eX>xBox+wBox)
-                        newX = xBox+wBox;
-                    else
+                    if (eX> refX) {
+                        newX = refX;
+                        nWidth = eX - refX;
+                    }
+                    else {
                         newX = eX;
-                    if (eY>yBox+hBoc)
-                        newY = yBox+hBoc;
-                    else
+                        nWidth = (refX)-eX;
+                    }
+                    if (eY> refY) {
+                        newY = refY;
+                        nHieght = eY- refY;
+                    }
+                    else {
                         newY = eY;
-                    nHieght = Math.abs(yBox + hBoc - newY);
-                    nWidth = Math.abs(wBox + xBox -newX);
+                        nHieght = refY - eY;
+                    }
                 }
 
                 //top-right
                 else if (edgeMode == 2) {
-                    newX = xBox;
-                    if (eY>yBox+hBoc)
-                        newY = yBox+hBoc;
-                    else
+                    if (eX > refX) {
+                        newX = refX;
+                        nWidth = eX - refX;
+                    }
+                    else{
+                        newX = eX;
+                        nWidth = (refX)-eX;
+                    }
+                    if (eY>refY) {
+                        newY = refY;
+                        nHieght = eY - refY;
+                    }
+                    else {
                         newY = eY;
-                    nHieght = Math.abs(hBoc+yBox - newY);
-                    nWidth = Math.abs(eX-hBoc);
+                        nHieght = refY - eY;
+                    }
                 }
+
                 //bottom-left
                 else if (edgeMode == 3) {
-                    if (eX>xBox+wBox)
-                        newX = xBox+wBox;
-                    else
+                    if (eX>refX){
+                        newX = refX;
+                        nWidth = eX - refX;
+                    }
+                    else{
                         newX = eX;
-                    newY=yBox;
-                    nHieght = Math.abs(eY-yBox);
-                    nWidth = Math.abs(xBox+wBox -newX);
+                        nWidth = (refX)-eX;
+                    }
+                    if (eY>refY) {
+                        newY = refY;
+                        nHieght = eY - refY;
+                    }
+                    else {
+                        newY = eY;
+                        nHieght = refY - eY;
+                    }
                 }
 
                 //bottom-right
                 else if (edgeMode == 4) {
-                    newX = xBox;
-                    newY = yBox;
-                    nHieght = Math.abs(eY-yBox);
-                    nWidth = Math.abs(eX -xBox);
+                    if (eX>refX) {
+                        newX = refX;
+                        nWidth = eX - refX;
+                    }
+                    else{
+                        newX = eX;
+                        nWidth = (refX)-eX;
+                    }
+                    if (eY>refY) {
+                        newY = refY;
+                        nHieght = eY - refY;
+                    }
+                    else{
+                        newY = eY;
+                        nHieght = refY - eY;
+                    }
                 }
                 else{
-                    newX = xBox;
-                    newY = yBox;
-                    nHieght = hBoc;
-                    nWidth = wBox;
+                    newX = refX;
+                    newY = refY;
+                    nHieght = imodel.getSelected().getHeight();
+                    nWidth = imodel.getSelected().getWidth();
                 }
 
                 imodel.getSelected().setDims(nWidth, nHieght);

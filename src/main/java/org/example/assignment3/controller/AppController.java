@@ -6,12 +6,14 @@ import org.example.assignment3.model.InteractionModel;
 
 public class AppController {
 
-    private enum State {READY, MOVING, PREPARE_CREATE, PANNING}
+    private enum State {READY, MOVING, PREPARE_CREATE, RESIZING, PANNING}
     private State currentState;
     private double x, y, dX, dY;
     private EntityModel model;
     private InteractionModel imodel;
     boolean pan = false;
+    //edgemodes will be the edge the mouse will click onto
+    int edgeMode = 0;
 
     public AppController() {
         currentState = State.READY;
@@ -28,6 +30,14 @@ public class AppController {
     // this functioon will check if mouse click was on the miniview or not
     public boolean clickInMini(double x, double y) {
         return x >=0 && x<= 210 && y >=0 && y<=210;
+    }
+
+    public boolean isClickOnEdge(double mX, double mY, double xBox, double yBoc) {
+        double dist = Math.sqrt(((mX-xBox)*(mX-xBox)) + ((mY-yBoc)*(mY-yBoc)));
+        if (dist <= imodel.edge)
+            return true;
+        else
+            return false;
     }
 
 
@@ -55,8 +65,35 @@ public class AppController {
         switch (currentState) {
 
             case READY:
+
+                if (imodel.getSelected() != null) {
+
+                    double xBox =  imodel.getSelected().getX();
+                    double yBox =  imodel.getSelected().getY();
+                    double wBox =  imodel.getSelected().getWidth();
+                    double hBoc =  imodel.getSelected().getHeight();
+
+                    //top-left
+                    if(isClickOnEdge(x, y, xBox, yBox))
+                        edgeMode = 1;
+                    //top-right
+                    else if(isClickOnEdge(x, y, xBox + wBox, yBox))
+                        edgeMode = 2;
+                    //bottom-left
+                    else if(isClickOnEdge(x, y, xBox, yBox+hBoc))
+                        edgeMode = 3;
+                    //bottomright
+                    else if(isClickOnEdge(x, y, xBox+wBox, yBox + hBoc))
+                        edgeMode=4;
+                    else
+                        edgeMode=0;
+                }
+
+                if (edgeMode != 0){
+                    currentState = State.RESIZING;
+                }
                 // this will get triggered when click is on an existing box to move it
-                if (model.contains(x,y)) {
+                else if(model.contains(x,y)) {
                     imodel.setSelected(model.whichObject(x,y));
                     model.notifySubscribers();
                     currentState = State.MOVING;
@@ -82,12 +119,17 @@ public class AppController {
             eX *= 10;
             eY *= 10;
         }
+
+        edgeMode=0;
+
         switch (currentState) {
             case PREPARE_CREATE:
                 currentState = State.READY;
             case MOVING:
                 currentState = State.READY;
             case PANNING:
+                currentState = State.READY;
+            case RESIZING:
                 currentState = State.READY;
         }
 //        System.out.println("Mouse Released");
@@ -159,12 +201,73 @@ public class AppController {
                 model.panView(dX, dY);
                 model.notifySubscribers();
                 break;
+
+            case RESIZING:
+
+                double xBox =  imodel.getSelected().getX();
+                double yBox =  imodel.getSelected().getY();
+                double wBox =  imodel.getSelected().getWidth();
+                double hBoc =  imodel.getSelected().getHeight();
+
+                double nWidth, nHieght, newX, newY;
+
+                //top-left
+                if (edgeMode == 1) {
+                    if (eX>xBox+wBox)
+                        newX = xBox+wBox;
+                    else
+                        newX = eX;
+                    if (eY>yBox+hBoc)
+                        newY = yBox+hBoc;
+                    else
+                        newY = eY;
+                    nHieght = Math.abs(yBox + hBoc - newY);
+                    nWidth = Math.abs(wBox + xBox -newX);
+                }
+
+                //top-right
+                else if (edgeMode == 2) {
+                    newX = xBox;
+                    if (eY>yBox+hBoc)
+                        newY = yBox+hBoc;
+                    else
+                        newY = eY;
+                    nHieght = Math.abs(hBoc+yBox - newY);
+                    nWidth = Math.abs(eX-hBoc);
+                }
+                //bottom-left
+                else if (edgeMode == 3) {
+                    if (eX>xBox+wBox)
+                        newX = xBox+wBox;
+                    else
+                        newX = eX;
+                    newY=yBox;
+                    nHieght = Math.abs(eY-yBox);
+                    nWidth = Math.abs(xBox+wBox -newX);
+                }
+
+                //bottom-right
+                else if (edgeMode == 4) {
+                    newX = xBox;
+                    newY = yBox;
+                    nHieght = Math.abs(eY-yBox);
+                    nWidth = Math.abs(eX -xBox);
+                }
+                else{
+                    newX = xBox;
+                    newY = yBox;
+                    nHieght = hBoc;
+                    nWidth = wBox;
+                }
+
+                imodel.getSelected().setDims(nWidth, nHieght);
+                imodel.getSelected().setCoords(newX, newY);
+                model.notifySubscribers();
+                break;
         }
-//        System.out.println("Mouse Drag");
     }
 
     public void handleKeyPress(KeyEvent event) {
-//        System.out.println("Delete");
         if (event.getCode() == KeyCode.DELETE || event.getCode() == KeyCode.BACK_SPACE) {
             if (imodel.getSelected() != null) {
                 model.removeObject(imodel.getSelected());

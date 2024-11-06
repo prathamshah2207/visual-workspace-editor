@@ -18,6 +18,11 @@ public class Box {
         return y;
     }
 
+    public void setCoords(double x, double y) {
+        this.x = x;
+        this.y = y;
+    }
+
     public double getWidth() {
         return width;
     }

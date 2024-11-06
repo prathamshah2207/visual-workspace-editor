@@ -31,6 +31,7 @@ public class AppController {
     }
 
 
+
     public void handlePressed(MouseEvent event) {
 
         x = event.getX();
@@ -112,15 +113,34 @@ public class AppController {
 //        System.out.println(currentState);
         switch (currentState) {
             case PREPARE_CREATE:
-                // will create a box while updating its width and height so the box will grow or shrink as per mouse dragging
-                double dWitdh = eX - x;
-                double dHeight = eY - y;
+                //will create a box while updating its width and height so the box will grow or shrink as per mouse dragging
+                double dWitdh, dHeight, nX, nY;
+
+                //made this for making boxes in all directions
+                if (eX> x) {
+                    dWitdh = eX - x;
+                    nX = x;
+                }
+                else {
+                    dWitdh = x - eX;
+                    nX = eX;
+                }
+                if (eY > y) {
+                    dHeight = eY - y;
+                    nY = y;
+                }
+                else {
+                    dHeight = y - eY;
+                    nY = eY;
+                }
+
                 imodel.getSelected().setDims(dWitdh, dHeight);
+                imodel.getSelected().setCoords(nX, nY);
                 model.notifySubscribers();
                 break;
 
             case MOVING:
-                // simply will move the box with the cursors position
+                //simply will move the box with the cursors position
                 dX = eX - x;
                 dY = eY - y;
                 x = eX;

@@ -55,7 +55,7 @@ public class DetailView extends Pane implements Subscriber {
             gc.setLineWidth(1);
             gc.strokeRect(X,Y, bx.getWidth(), bx.getHeight());
 
-            if (imodel.getSelected() == bx) {
+            if (bx==imodel.getSelected()) {
                 gc.setFill(Color.WHITE);
                 gc.fillOval(X- edge, Y-edge, edge*2, edge*2);
                 gc.fillOval(X- edge+bx.getWidth(), Y-edge+bx.getHeight(), edge*2, edge*2);

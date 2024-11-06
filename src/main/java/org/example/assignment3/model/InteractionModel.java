@@ -1,15 +1,15 @@
 package org.example.assignment3.model;
 
 public class InteractionModel {
-    private Box selected;
+    private Box slct;
 
     public InteractionModel() {
-        selected = null;
+        slct = null;
     }
     public void setSelected(Box bx) {
-        selected = bx;
+        slct = bx;
     }
     public Box getSelected() {
-        return selected;
+        return slct;
     }
 }

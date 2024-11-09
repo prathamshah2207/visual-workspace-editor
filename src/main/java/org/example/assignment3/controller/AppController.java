@@ -6,7 +6,7 @@ import org.example.assignment3.model.InteractionModel;
 
 public class AppController {
 
-    private enum State {READY, MOVING, PREPARE_CREATE, RESIZING, PANNING}
+    private enum State {READY, MOVING, PREPARE_CREATE, RESIZING, PANNING, PORTAL_CREATE}
     private State currentState;
     private double x, y, dX, dY, refX, refY;
     private EntityModel model;
@@ -50,8 +50,10 @@ public class AppController {
         if (event.isShiftDown()) {
             currentState = State.PANNING;
             pan = true;
-        }
-        else if (clickInMini(x,y ) == true) {
+        } else if (event.isControlDown()) {
+            currentState = State.PORTAL_CREATE;
+            pan = false;
+        } else if (clickInMini(x,y ) == true) {
             y *= 10;
             x *= 10;
             pan=false;
@@ -309,6 +311,10 @@ public class AppController {
                 imodel.getSelected().setDims(nWidth, nHieght);
                 imodel.getSelected().setCoords(newX, newY);
                 model.notifySubscribers();
+                break;
+
+            case PORTAL_CREATE:
+
                 break;
         }
     }

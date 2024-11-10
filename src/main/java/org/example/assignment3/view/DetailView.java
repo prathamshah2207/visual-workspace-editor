@@ -7,6 +7,7 @@ import javafx.scene.paint.Color;
 import org.example.assignment3.model.InteractionModel;
 import org.example.assignment3.controller.AppController;
 import org.example.assignment3.model.EntityModel;
+import org.example.assignment3.model.Portal;
 import org.example.assignment3.model.Subscriber;
 
 public class DetailView extends Pane implements Subscriber {
@@ -49,16 +50,37 @@ public class DetailView extends Pane implements Subscriber {
                 } else {
                     gc.setFill(Color.BLUE);
                 }
+                gc.fillRect(X, Y, bx.getWidth(), bx.getHeight());
+                gc.setStroke(Color.BLACK);
+                gc.setLineWidth(1);
+                gc.strokeRect(X, Y, bx.getWidth(), bx.getHeight());
             } else if (bx.type().equals("Portal")) {
-                gc.setFill(Color.GRAY);
+                gc.setFill(Color.LIGHTGRAY);
+                gc.fillRect(X, Y, bx.getWidth(), bx.getHeight());
+                gc.setStroke(Color.BLACK);
+                gc.setLineWidth(1);
+                gc.strokeRect(X, Y, bx.getWidth(), bx.getHeight());
+
+                gc.save();
+                gc.translate(X, Y);
+                gc.scale(bx.getScaleFactor(), bx.getScaleFactor());
+                gc.translate(-bx.getSightAtX(), -bx.getSightAtY());
+                model.getObjects().forEach(inbx -> {
+                    if (imodel.getSelected() == inbx) {
+
+                        gc.setFill(Color.ORANGE);
+                    } else {
+                        gc.setFill(Color.BLUE);
+                    }
+                    double innX = inbx.getX()- bx.getSightAtX();
+                    double innY =inbx.getY()-bx.getSightAtY();
+                    gc.fillRect(innX, innY, inbx.getWidth(), inbx.getHeight());
+                });
+                gc.restore();
+
             }
 
             //the edge circles creation is here with a proper border too
-
-            gc.fillRect(X, Y, bx.getWidth(), bx.getHeight());
-            gc.setStroke(Color.BLACK);
-            gc.setLineWidth(1);
-            gc.strokeRect(X, Y, bx.getWidth(), bx.getHeight());
 
             if (bx == imodel.getSelected()) {
                 gc.setFill(Color.WHITE);

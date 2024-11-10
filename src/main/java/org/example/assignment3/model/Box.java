@@ -48,4 +48,17 @@ public class Box implements object{
     public String type(){
         return "Box";
     }
+
+    @Override
+    public double getScaleFactor() {
+        return 1;
+    }
+    @Override
+    public double getSightAtX() {
+        return 0;
+    }
+    @Override
+    public double getSightAtY() {
+        return 0;
+    }
 }

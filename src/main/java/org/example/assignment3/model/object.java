@@ -10,4 +10,7 @@ public interface object {
     void setDims(double w, double h);
     void setCoords(double x, double y);
     String type();
+    double getScaleFactor();
+    double getSightAtX();
+    double getSightAtY();
 }

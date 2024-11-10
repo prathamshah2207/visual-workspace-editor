@@ -46,7 +46,7 @@ public class MiniView extends DetailView{
                 }
 
             } else if (minibox.type()=="Portal") {
-                gc.setFill(Color.GRAY);
+                gc.setFill(Color.LIGHTGRAY);
             }
 
             gc.setGlobalAlpha(1);

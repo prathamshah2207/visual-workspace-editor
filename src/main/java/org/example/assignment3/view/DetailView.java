@@ -10,6 +10,8 @@ import org.example.assignment3.model.EntityModel;
 import org.example.assignment3.model.Portal;
 import org.example.assignment3.model.Subscriber;
 
+import java.util.ArrayList;
+
 public class DetailView extends Pane implements Subscriber {
 
     Canvas myCan;
@@ -42,6 +44,7 @@ public class DetailView extends Pane implements Subscriber {
 
             double X = bx.getX() - model.getViewLeft();
             double Y = bx.getY() - model.getViewTop();
+            gc.setLineWidth(2);
 
             if (bx.type().equals("Box")) {
                 if (imodel.getSelected() == bx) {
@@ -52,53 +55,67 @@ public class DetailView extends Pane implements Subscriber {
                 }
                 gc.fillRect(X, Y, bx.getWidth(), bx.getHeight());
                 gc.setStroke(Color.BLACK);
-                gc.setLineWidth(1);
                 gc.strokeRect(X, Y, bx.getWidth(), bx.getHeight());
+
             } else if (bx.type().equals("Portal")) {
                 gc.setFill(Color.LIGHTGRAY);
                 gc.fillRect(X, Y, bx.getWidth(), bx.getHeight());
                 gc.setStroke(Color.BLACK);
-                gc.setLineWidth(1);
                 gc.strokeRect(X, Y, bx.getWidth(), bx.getHeight());
 
-                gc.save();
-                gc.translate(X, Y);
-                gc.scale(bx.getScaleFactor(), bx.getScaleFactor());
-                gc.translate(-bx.getSightAtX(), -bx.getSightAtY());
-                model.getObjects().forEach(inbx -> {
-                    if (imodel.getSelected() == inbx) {
-
-                        gc.setFill(Color.ORANGE);
-                    } else {
-                        gc.setFill(Color.BLUE);
-                    }
-                    double innX = inbx.getX()- bx.getSightAtX();
-                    double innY =inbx.getY()-bx.getSightAtY();
-                    gc.fillRect(innX, innY, inbx.getWidth(), inbx.getHeight());
-                });
-                gc.restore();
-
+                portalDrawing(X, Y, bx.getWidth(), bx.getHeight(), bx.getScaleFactor(), bx.getSightAtX(), bx.getSightAtY());
             }
 
             //the edge circles creation is here with a proper border too
 
             if (bx == imodel.getSelected()) {
-                gc.setFill(Color.WHITE);
-                gc.fillOval(X - imodel.edge, Y - imodel.edge, imodel.edge * 2, imodel.edge * 2);
-                gc.fillOval(X - imodel.edge + bx.getWidth(), Y - imodel.edge + bx.getHeight(), imodel.edge * 2, imodel.edge * 2);
-                gc.fillOval(X - imodel.edge, Y - imodel.edge + bx.getHeight(), imodel.edge * 2, imodel.edge * 2);
-                gc.fillOval(X - imodel.edge + bx.getWidth(), Y - imodel.edge, imodel.edge * 2, imodel.edge * 2);
-
-                gc.strokeOval(X - imodel.edge, Y - imodel.edge, imodel.edge * 2, imodel.edge * 2);
-                gc.strokeOval(X - imodel.edge + bx.getWidth(), Y - imodel.edge + bx.getHeight(), imodel.edge * 2, imodel.edge * 2);
-                gc.strokeOval(X - imodel.edge, Y - imodel.edge + bx.getHeight(), imodel.edge * 2, imodel.edge * 2);
-                gc.strokeOval(X - imodel.edge + bx.getWidth(), Y - imodel.edge, imodel.edge * 2, imodel.edge * 2);
+                cornerDrawing(X, Y, bx.getWidth(), bx.getHeight());
             }
         });
 
         model.setViewHeight(getHeight());
         model.setViewWidth(getWidth());
     }
+
+    private void cornerDrawing(double X, double Y, double width, double height) {
+        gc.setFill(Color.WHITE);
+        gc.fillOval(X - imodel.edge, Y - imodel.edge, imodel.edge * 2, imodel.edge * 2);
+        gc.fillOval(X - imodel.edge + width, Y - imodel.edge + height, imodel.edge * 2, imodel.edge * 2);
+        gc.fillOval(X - imodel.edge, Y - imodel.edge + height, imodel.edge * 2, imodel.edge * 2);
+        gc.fillOval(X - imodel.edge + width, Y - imodel.edge, imodel.edge * 2, imodel.edge * 2);
+
+        gc.setStroke(Color.BLACK);
+        gc.strokeOval(X - imodel.edge, Y - imodel.edge, imodel.edge * 2, imodel.edge * 2);
+        gc.strokeOval(X - imodel.edge + width, Y - imodel.edge + height, imodel.edge * 2, imodel.edge * 2);
+        gc.strokeOval(X - imodel.edge, Y - imodel.edge + height, imodel.edge * 2, imodel.edge * 2);
+        gc.strokeOval(X - imodel.edge + width, Y - imodel.edge, imodel.edge * 2, imodel.edge * 2);
+    }
+
+    private void portalDrawing(double x, double y, double width, double height, double sclFctr, double Xsight, double Ysight){
+        gc.save();
+
+        gc.translate(x, y);
+        gc.scale(sclFctr,sclFctr);
+        gc.translate(-Xsight, -Ysight);
+
+        model.getObjects().forEach(inbx -> {
+            if (imodel.getSelected() == inbx) {
+
+                gc.setFill(Color.ORANGE);
+            } else {
+                gc.setFill(Color.BLUE);
+            }
+
+            double innX = inbx.getX()- Xsight;
+            double innY =inbx.getY()-Ysight;
+
+            gc.fillRect(innX, innY, Math.min(inbx.getWidth(),((width/sclFctr)-inbx.getX())), Math.min(inbx.getHeight(), ((height/sclFctr)-inbx.getY())));
+            gc.strokeRect(innX, innY, Math.min(inbx.getWidth(),((width/sclFctr)-inbx.getX())), Math.min(inbx.getHeight(), ((height/sclFctr)-inbx.getY())));
+
+        });
+        gc.restore();
+    }
+
     public void modelChanged() {
         draw();
     }

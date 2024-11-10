@@ -39,35 +39,38 @@ public class DetailView extends Pane implements Subscriber {
 
         model.getObjects().forEach(bx -> {
 
+            double X = bx.getX() - model.getViewLeft();
+            double Y = bx.getY() - model.getViewTop();
+
             if (bx.type().equals("Box")) {
-                double X = bx.getX() - model.getViewLeft();
-                double Y = bx.getY() - model.getViewTop();
                 if (imodel.getSelected() == bx) {
 
                     gc.setFill(Color.ORANGE);
                 } else {
                     gc.setFill(Color.BLUE);
                 }
-
-                gc.fillRect(X, Y, bx.getWidth(), bx.getHeight());
-                gc.setStroke(Color.BLACK);
-                gc.setLineWidth(1);
-                gc.strokeRect(X, Y, bx.getWidth(), bx.getHeight());
-
-                if (bx == imodel.getSelected()) {
-                    gc.setFill(Color.WHITE);
-                    gc.fillOval(X - imodel.edge, Y - imodel.edge, imodel.edge * 2, imodel.edge * 2);
-                    gc.fillOval(X - imodel.edge + bx.getWidth(), Y - imodel.edge + bx.getHeight(), imodel.edge * 2, imodel.edge * 2);
-                    gc.fillOval(X - imodel.edge, Y - imodel.edge + bx.getHeight(), imodel.edge * 2, imodel.edge * 2);
-                    gc.fillOval(X - imodel.edge + bx.getWidth(), Y - imodel.edge, imodel.edge * 2, imodel.edge * 2);
-
-                    gc.strokeOval(X - imodel.edge, Y - imodel.edge, imodel.edge * 2, imodel.edge * 2);
-                    gc.strokeOval(X - imodel.edge + bx.getWidth(), Y - imodel.edge + bx.getHeight(), imodel.edge * 2, imodel.edge * 2);
-                    gc.strokeOval(X - imodel.edge, Y - imodel.edge + bx.getHeight(), imodel.edge * 2, imodel.edge * 2);
-                    gc.strokeOval(X - imodel.edge + bx.getWidth(), Y - imodel.edge, imodel.edge * 2, imodel.edge * 2);
-                }
             } else if (bx.type().equals("Portal")) {
-//                System.out.println("Portal");
+                gc.setFill(Color.GRAY);
+            }
+
+            //the edge circles creation is here with a proper border too
+
+            gc.fillRect(X, Y, bx.getWidth(), bx.getHeight());
+            gc.setStroke(Color.BLACK);
+            gc.setLineWidth(1);
+            gc.strokeRect(X, Y, bx.getWidth(), bx.getHeight());
+
+            if (bx == imodel.getSelected()) {
+                gc.setFill(Color.WHITE);
+                gc.fillOval(X - imodel.edge, Y - imodel.edge, imodel.edge * 2, imodel.edge * 2);
+                gc.fillOval(X - imodel.edge + bx.getWidth(), Y - imodel.edge + bx.getHeight(), imodel.edge * 2, imodel.edge * 2);
+                gc.fillOval(X - imodel.edge, Y - imodel.edge + bx.getHeight(), imodel.edge * 2, imodel.edge * 2);
+                gc.fillOval(X - imodel.edge + bx.getWidth(), Y - imodel.edge, imodel.edge * 2, imodel.edge * 2);
+
+                gc.strokeOval(X - imodel.edge, Y - imodel.edge, imodel.edge * 2, imodel.edge * 2);
+                gc.strokeOval(X - imodel.edge + bx.getWidth(), Y - imodel.edge + bx.getHeight(), imodel.edge * 2, imodel.edge * 2);
+                gc.strokeOval(X - imodel.edge, Y - imodel.edge + bx.getHeight(), imodel.edge * 2, imodel.edge * 2);
+                gc.strokeOval(X - imodel.edge + bx.getWidth(), Y - imodel.edge, imodel.edge * 2, imodel.edge * 2);
             }
         });
 

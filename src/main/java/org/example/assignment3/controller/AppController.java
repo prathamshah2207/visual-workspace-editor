@@ -216,7 +216,7 @@ public class AppController {
                 break;
 
             case PORTAL_CREATE:
-                System.out.println("Creating Portal");
+                System.out.println("creating portl");
                 double pWidth, pHeight, pX, pY;
                 //this will make portals in all directions
                 if (eX> x) {

@@ -14,7 +14,7 @@ public class MiniView extends DetailView{
     public void draw(){
         // the background
         gc.clearRect(0, 0, miniSz, miniSz);
-        gc.setFill(Color.LIGHTGRAY);
+        gc.setFill(Color.GRAY);
         gc.setGlobalAlpha(0.82);
         gc.fillRect(0, 0, miniSz, miniSz);
 
@@ -30,6 +30,13 @@ public class MiniView extends DetailView{
 
         // each box inide the miniview
         model.getObjects().forEach(minibox -> {
+
+            //this is just for a relative size calculation from the actual canvas
+            double relativeX = minibox.getX()* miniSz / world;
+            double relativeY = minibox.getY()*miniSz / world;
+            double relativeWidth = minibox.getWidth()*miniSz / world;
+            double relativeHeight = minibox.getHeight()*miniSz / world;
+
             if(minibox.type() == "Box"){
                 if (imodel.getSelected() == minibox) {
                     gc.setFill(Color.ORANGE);
@@ -38,16 +45,15 @@ public class MiniView extends DetailView{
                     gc.setFill(Color.BLUE);
                 }
 
-                double relativeX = minibox.getX()* miniSz / world;
-                double relativeY = minibox.getY()*miniSz / world;
-                double relativeWidth = minibox.getWidth()*miniSz / world;
-                double relativeHeight = minibox.getHeight()*miniSz / world;
-
-                gc.fillRect(relativeX, relativeY, relativeWidth, relativeHeight);
-                gc.setStroke(Color.BLACK);
-                gc.setLineWidth(0.5);
-                gc.strokeRect(relativeX, relativeY, relativeWidth, relativeHeight);
+            } else if (minibox.type()=="Portal") {
+                gc.setFill(Color.GRAY);
             }
+
+            gc.setGlobalAlpha(1);
+            gc.fillRect(relativeX, relativeY, relativeWidth, relativeHeight);
+            gc.setStroke(Color.BLACK);
+            gc.setLineWidth(0.1);
+            gc.strokeRect(relativeX, relativeY, relativeWidth, relativeHeight);
         });
     }
 }

@@ -9,4 +9,5 @@ public interface object {
     double getHeight();
     void setDims(double w, double h);
     void setCoords(double x, double y);
+    String type();
 }

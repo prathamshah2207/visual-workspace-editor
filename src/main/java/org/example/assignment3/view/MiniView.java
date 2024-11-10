@@ -30,23 +30,24 @@ public class MiniView extends DetailView{
 
         // each box inide the miniview
         model.getObjects().forEach(minibox -> {
-            if (imodel.getSelected() == minibox) {
-                gc.setFill(Color.ORANGE);
-            }
-            else {
-                gc.setFill(Color.BLUE);
-            }
+            if(minibox.type() == "Box"){
+                if (imodel.getSelected() == minibox) {
+                    gc.setFill(Color.ORANGE);
+                }
+                else {
+                    gc.setFill(Color.BLUE);
+                }
 
-            double relativeX = minibox.getX()* miniSz / world;
-            double relativeY = minibox.getY()*miniSz / world;
-            double relativeWidth = minibox.getWidth()*miniSz / world;
-            double relativeHeight = minibox.getHeight()*miniSz / world;
+                double relativeX = minibox.getX()* miniSz / world;
+                double relativeY = minibox.getY()*miniSz / world;
+                double relativeWidth = minibox.getWidth()*miniSz / world;
+                double relativeHeight = minibox.getHeight()*miniSz / world;
 
-            gc.fillRect(relativeX, relativeY, relativeWidth, relativeHeight);
-            gc.setStroke(Color.BLACK);
-            gc.setLineWidth(0.5);
-            gc.strokeRect(relativeX, relativeY, relativeWidth, relativeHeight);
+                gc.fillRect(relativeX, relativeY, relativeWidth, relativeHeight);
+                gc.setStroke(Color.BLACK);
+                gc.setLineWidth(0.5);
+                gc.strokeRect(relativeX, relativeY, relativeWidth, relativeHeight);
+            }
         });
-        
     }
 }

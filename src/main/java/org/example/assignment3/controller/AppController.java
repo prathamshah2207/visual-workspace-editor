@@ -6,7 +6,7 @@ import org.example.assignment3.model.InteractionModel;
 
 public class AppController {
 
-    private enum State {READY, MOVING, PREPARE_CREATE, RESIZING, PANNING, PORTAL_CREATE}
+    private enum State {READY, MOVING, PREPARE_CREATE, RESIZING, PANNING, PORTALING, PORTAL_CREATE}
     private State currentState;
     private double x, y, dX, dY, refX, refY;
     private EntityModel model;
@@ -51,7 +51,7 @@ public class AppController {
             currentState = State.PANNING;
             pan = true;
         } else if (event.isControlDown()) {
-            currentState = State.PORTAL_CREATE;
+            currentState = State.PORTALING;
             pan = false;
         } else if (clickInMini(x,y ) == true) {
             y *= 10;
@@ -124,6 +124,21 @@ public class AppController {
 
                     currentState = State.PREPARE_CREATE;
                 }
+                break;
+
+            case PORTALING:
+                if(model.contains(x,y)) {
+                    imodel.setSelected(model.whichObject(x,y));
+                    model.notifySubscribers();
+                    currentState = State.MOVING;
+                }
+                else{
+                    imodel.setSelected(null);
+                    imodel.setSelected(model.makePortal(x,y));
+                    model.addObject(imodel.getSelected());
+                    model.notifySubscribers();
+                    currentState = State.PORTAL_CREATE;
+                }
         }
 //        System.out.println("Mouse Pressed");
     }
@@ -147,6 +162,8 @@ public class AppController {
             case PANNING:
                 currentState = State.READY;
             case RESIZING:
+                currentState = State.READY;
+            case PORTAL_CREATE:
                 currentState = State.READY;
         }
 //        System.out.println("Mouse Released");
@@ -195,6 +212,32 @@ public class AppController {
 
                 imodel.getSelected().setDims(dWitdh, dHeight);
                 imodel.getSelected().setCoords(nX, nY);
+                model.notifySubscribers();
+                break;
+
+            case PORTAL_CREATE:
+                System.out.println("Creating Portal");
+                double pWidth, pHeight, pX, pY;
+                //this will make portals in all directions
+                if (eX> x) {
+                    pWidth = eX - x;
+                    pX = x;
+                }
+                else {
+                    pWidth = x - eX;
+                    pX = eX;
+                }
+                if (eY > y) {
+                    pHeight = eY - y;
+                    pY = y;
+                }
+                else {
+                    pHeight = y - eY;
+                    pY = eY;
+                }
+
+                imodel.getSelected().setDims(pWidth, pHeight);
+                imodel.getSelected().setCoords(pX, pY);
                 model.notifySubscribers();
                 break;
 
@@ -311,10 +354,6 @@ public class AppController {
                 imodel.getSelected().setDims(nWidth, nHieght);
                 imodel.getSelected().setCoords(newX, newY);
                 model.notifySubscribers();
-                break;
-
-            case PORTAL_CREATE:
-
                 break;
         }
     }

@@ -45,4 +45,7 @@ public class Box implements object{
         x += deltaX;
         y += deltaY;
     }
+    public String type(){
+        return "Box";
+    }
 }

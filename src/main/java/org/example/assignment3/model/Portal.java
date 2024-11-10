@@ -29,4 +29,7 @@ public class Portal extends Box{
     public double getSightAtY() {
         return vY;
     }
+    public String type(){
+        return "Portal";
+    }
 }

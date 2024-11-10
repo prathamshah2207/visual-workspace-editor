@@ -1,16 +1,16 @@
 package org.example.assignment3.model;
 
 public class InteractionModel {
-    private Box slct;
+    private object slct;
     public double edge = 4.6;
 
     public InteractionModel() {
         slct = null;
     }
-    public void setSelected(Box bx) {
-        slct = bx;
+    public void setSelected(object ob) {
+        slct = ob;
     }
-    public Box getSelected() {
+    public object getSelected() {
         return slct;
     }
 }

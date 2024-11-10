@@ -1,6 +1,6 @@
 package org.example.assignment3.model;
 
-public class Box {
+public class Box implements object{
     double x, y, hieght, width;
 
     public Box(double newX, double newY) {

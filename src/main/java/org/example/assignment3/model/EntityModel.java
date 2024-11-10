@@ -1,9 +1,11 @@
 package org.example.assignment3.model;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class EntityModel {
     private ArrayList<Subscriber> subsLst;
-    private ArrayList<Box> boxLst;
+    //this is the objects list that will have both the box as well as portal
+    private ArrayList<object> objLst;
 
     private double viewLeft;
     private double viewTop;
@@ -13,7 +15,7 @@ public class EntityModel {
 
     public EntityModel() {
         subsLst = new ArrayList<>();
-        boxLst = new ArrayList<>();
+        objLst = new ArrayList<>();
         viewLeft = 0;
         viewTop = 0;
     }
@@ -54,29 +56,34 @@ public class EntityModel {
         notifySubscribers();
         return box;
     }
+    public Portal makePortal(double x, double y) {
+        Portal portal = new Portal(x, y);
+        notifySubscribers();
+        return portal;
+    }
 
-    public void addObject(Box b) {
-        boxLst.add(b);
+    public void addObject(object b) {
+        objLst.add(b);
         notifySubscribers();
     }
-    public void removeObject(Box b) {
-        boxLst.remove(b);
+    public void removeObject(object b) {
+        objLst.remove(b);
         notifySubscribers();
     }
 
-    public ArrayList<Box> getObjects() {
-        return boxLst;
+    public ArrayList<object> getObjects() {
+        return objLst;
     }
 
-    public void moveObject(Box b, double dx, double dy) {
-        if (boxLst.contains(b)) {
+    public void moveObject(object b, double dx, double dy) {
+        if (objLst.contains(b)) {
             b.move(dx, dy);
             notifySubscribers();
         }
     }
 
-    public Box whichObject(double x, double y) {
-        return boxLst.stream().filter(e -> e.contains(x,y)).findFirst().orElse(null);
+    public object whichObject(double x, double y) {
+        return objLst.stream().filter(e -> e.contains(x,y)).findFirst().orElse(null);
     }
 
     public void notifySubscribers() {
@@ -86,6 +93,6 @@ public class EntityModel {
         subsLst.add(s);
     }
     public boolean contains(double x, double y) {
-        return boxLst.stream().anyMatch(e -> e.contains(x,y));
+        return objLst.stream().anyMatch(e -> e.contains(x,y));
     }
 }

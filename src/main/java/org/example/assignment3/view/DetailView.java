@@ -101,25 +101,32 @@ public class DetailView extends Pane implements Subscriber {
 
         model.getObjects().forEach(inbx -> {
 
-            double innX = inbx.getX()- Xsight;
-            double innY =inbx.getY()-Ysight;
+            double innX = inbx.getX();
+            double innY = inbx.getY();
+            double visWitdh = Math.min(inbx.getWidth(), ((width / sclFctr) - inbx.getX()));
+            double visHeight =Math.min(inbx.getHeight(), ((height / sclFctr) - inbx.getY()));
 
-            if (inbx.type()=="Box"){
-                if (imodel.getSelected() == inbx) {
+            if (visWitdh > 0 && visHeight > 0) {
+                double showX = innX - Xsight;
+                double showY = innY - Ysight;
 
-                    gc.setFill(Color.ORANGE);
-                } else {
-                    gc.setFill(Color.BLUE);
+                if (inbx.type() == "Box") {
+                    if (imodel.getSelected() == inbx) {
+
+                        gc.setFill(Color.ORANGE);
+                    } else {
+                        gc.setFill(Color.BLUE);
+                    }
+                    gc.fillRect(showX, showY,visWitdh, visHeight);
+                    gc.strokeRect(showX, showY, visWitdh, visHeight);
+
+                } else if (inbx.type() == "Portal") {
+                    gc.setFill(Color.LIGHTGRAY);
+                    gc.fillRect(showX, showY,visWitdh, visHeight);
+                    gc.strokeRect(showX, showY, visWitdh,visHeight);
+                    if (level < 2)
+                        portalDrawing(showX, showY, visWitdh, visHeight, inbx.getScaleFactor(), inbx.getSightAtX(), inbx.getSightAtY(), level + 1);
                 }
-                gc.fillRect(innX, innY, Math.min(inbx.getWidth(),((width/sclFctr)-inbx.getX())), Math.min(inbx.getHeight(), ((height/sclFctr)-inbx.getY())));
-                gc.strokeRect(innX, innY, Math.min(inbx.getWidth(),((width/sclFctr)-inbx.getX())), Math.min(inbx.getHeight(), ((height/sclFctr)-inbx.getY())));
-
-            } else if (inbx.type() == "Portal") {
-                gc.setFill(Color.LIGHTGRAY);
-                gc.fillRect(innX, innY, Math.min(inbx.getWidth(),((width/sclFctr)-inbx.getX())), Math.min(inbx.getHeight(), ((height/sclFctr)-inbx.getY())));
-                gc.strokeRect(innX, innY, Math.min(inbx.getWidth(),((width/sclFctr)-inbx.getX())), Math.min(inbx.getHeight(), ((height/sclFctr)-inbx.getY())));
-                if (level < 2)
-                    portalDrawing(x, y, inbx.getWidth(), inbx.getHeight(), inbx.getScaleFactor(), inbx.getSightAtX(), inbx.getSightAtY(), level + 1);
             }
         });
         gc.restore();

@@ -6,7 +6,7 @@ import org.example.assignment3.model.InteractionModel;
 
 public class AppController {
 
-    private enum State {READY, MOVING, PREPARE_CREATE, RESIZING, PANNING, PORTALING, PORTAL_CREATE}
+    private enum State {READY, MOVING, PREPARE_CREATE, RESIZING, PANNING, PORTALING, PORTAL_CREATE, IN_PORTAL_MOVING}
     private State currentState;
     private double x, y, dX, dY, refX, refY;
     private EntityModel model;
@@ -45,23 +45,25 @@ public class AppController {
     public void handlePressed(MouseEvent event) {
 
         x = event.getX();
-        y=event.getY();
+        y = event.getY();
 
         if (event.isShiftDown()) {
             currentState = State.PANNING;
             pan = true;
         } else if (event.isControlDown()) {
             currentState = State.PORTALING;
+            System.out.println("portaling");
+            x +=model.getViewLeft();
+            y +=model.getViewTop();
             pan = false;
-        } else if (clickInMini(x,y ) == true) {
+        } else if (clickInMini(x, y) == true) {
             y *= 10;
             x *= 10;
-            pan=false;
-        }
-        else {
-            y+= model.getViewTop();
-            x+= model.getViewLeft();
-            pan=false;
+            pan = false;
+        } else {
+            y += model.getViewTop();
+            x += model.getViewLeft();
+            pan = false;
         }
 
         switch (currentState) {
@@ -70,55 +72,54 @@ public class AppController {
 
                 if (imodel.getSelected() != null) {
 
-                    double xBox =  imodel.getSelected().getX();
-                    double yBox =  imodel.getSelected().getY();
-                    double wBox =  imodel.getSelected().getWidth();
-                    double hBoc =  imodel.getSelected().getHeight();
+                    double xBox = imodel.getSelected().getX();
+                    double yBox = imodel.getSelected().getY();
+                    double wBox = imodel.getSelected().getWidth();
+                    double hBoc = imodel.getSelected().getHeight();
 
                     //top-left
-                    if(isClickOnEdge(x, y, xBox, yBox)) {
+                    if (isClickOnEdge(x, y, xBox, yBox)) {
                         refX = xBox + wBox;
-                        refY = yBox +hBoc;
+                        refY = yBox + hBoc;
                         edgeMode = 1;
                     }
                     //top-right
-                    else if(isClickOnEdge(x, y, xBox + wBox, yBox)) {
+                    else if (isClickOnEdge(x, y, xBox + wBox, yBox)) {
                         refX = xBox;
-                        refY = yBox+hBoc;
+                        refY = yBox + hBoc;
                         edgeMode = 2;
                     }
                     //bottom-left
-                    else if(isClickOnEdge(x, y, xBox, yBox+hBoc)) {
+                    else if (isClickOnEdge(x, y, xBox, yBox + hBoc)) {
                         refX = xBox + wBox;
                         refY = yBox;
                         edgeMode = 3;
                     }
                     //bottomright
-                    else if(isClickOnEdge(x, y, xBox+wBox, yBox + hBoc)) {
+                    else if (isClickOnEdge(x, y, xBox + wBox, yBox + hBoc)) {
                         refX = xBox;
                         refY = yBox;
                         edgeMode = 4;
-                    }
-                    else {
+                    } else {
                         refX = 0;
                         refY = 0;
                         edgeMode = 0;
                     }
                 }
 
-                if (edgeMode != 0){
+                if (edgeMode != 0) {
                     currentState = State.RESIZING;
                 }
                 // this will get triggered when click is on an existing box to move it
-                else if(model.contains(x,y)) {
-                    imodel.setSelected(model.whichObject(x,y));
+                else if (model.contains(x, y)) {
+                    imodel.setSelected(model.whichObject(x, y));
                     model.notifySubscribers();
                     currentState = State.MOVING;
                 }
                 // this wil start creating a new box
                 else {
                     imodel.setSelected(null);
-                    imodel.setSelected(model.makeObject(x,y));
+                    imodel.setSelected(model.makeObject(x, y));
                     model.addObject(imodel.getSelected());
                     model.notifySubscribers();
 
@@ -128,17 +129,17 @@ public class AppController {
 
             case PORTALING:
                 if(model.contains(x,y)) {
-                    imodel.setSelected(model.whichObject(x,y));
+                    imodel.setSelected(model.whichObject(x, y));
                     model.notifySubscribers();
-                    currentState = State.MOVING;
-                }
-                else{
+                    currentState = State.IN_PORTAL_MOVING;
+                }else {
                     imodel.setSelected(null);
-                    imodel.setSelected(model.makePortal(x,y));
+                    imodel.setSelected(model.makePortal(x, y));
                     model.addObject(imodel.getSelected());
                     model.notifySubscribers();
                     currentState = State.PORTAL_CREATE;
                 }
+                break;
         }
 //        System.out.println("Mouse Pressed");
     }
@@ -249,6 +250,10 @@ public class AppController {
                 y = eY;
                 model.moveObject(imodel.getSelected(), dX, dY);
                 model.notifySubscribers();
+                break;
+
+            case IN_PORTAL_MOVING:
+                System.out.println("box moving in portal");
                 break;
 
             // this will make the canvas move around for looking at different parts of world

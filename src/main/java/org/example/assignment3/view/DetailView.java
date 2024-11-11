@@ -91,7 +91,7 @@ public class DetailView extends Pane implements Subscriber {
         gc.strokeOval(X - imodel.edge + width, Y - imodel.edge, imodel.edge * 2, imodel.edge * 2);
     }
 
-    private void portalDrawing(double x, double y, double width, double height, double sclFctr, double Xsight, double Ysight, int level){
+    protected void portalDrawing(double x, double y, double width, double height, double sclFctr, double Xsight, double Ysight, int level){
         gc.save();
 
         gc.translate(x, y);

@@ -7,6 +7,7 @@ public class MiniView extends DetailView{
     private double miniSz = 200;
 
     public MiniView(){
+        super();
         myCan.setWidth(miniSz);
         myCan.setHeight(miniSz);
     }
@@ -14,7 +15,7 @@ public class MiniView extends DetailView{
     public void draw(){
         // the background
         gc.clearRect(0, 0, miniSz, miniSz);
-        gc.setFill(Color.GRAY);
+        gc.setFill(Color.LIGHTGRAY);
         gc.setGlobalAlpha(0.82);
         gc.fillRect(0, 0, miniSz, miniSz);
 
@@ -36,7 +37,13 @@ public class MiniView extends DetailView{
             double relativeY = minibox.getY()*miniSz / world;
             double relativeWidth = minibox.getWidth()*miniSz / world;
             double relativeHeight = minibox.getHeight()*miniSz / world;
+            double miniSclFctr = minibox.getScaleFactor()*miniSz / world;
+            double miniSightX = minibox.getSightAtX()*miniSz / world;
+            double miniSightY = minibox.getSightAtY()*miniSz / world;
 
+            gc.setGlobalAlpha(1);
+            gc.setStroke(Color.BLACK);
+            gc.setLineWidth(0.3);
             if(minibox.type() == "Box"){
                 if (imodel.getSelected() == minibox) {
                     gc.setFill(Color.ORANGE);
@@ -44,16 +51,16 @@ public class MiniView extends DetailView{
                 else {
                     gc.setFill(Color.BLUE);
                 }
+                gc.fillRect(relativeX, relativeY, relativeWidth, relativeHeight);
+                gc.strokeRect(relativeX, relativeY, relativeWidth, relativeHeight);
 
             } else if (minibox.type()=="Portal") {
                 gc.setFill(Color.LIGHTGRAY);
+                gc.fillRect(relativeX, relativeY, relativeWidth, relativeHeight);
+                gc.strokeRect(relativeX, relativeY, relativeWidth, relativeHeight);
+                gc.setLineWidth(1);
+                portalDrawing(relativeX, relativeY, relativeWidth, relativeHeight, miniSclFctr, miniSightX, miniSightY, 1);
             }
-
-            gc.setGlobalAlpha(1);
-            gc.fillRect(relativeX, relativeY, relativeWidth, relativeHeight);
-            gc.setStroke(Color.BLACK);
-            gc.setLineWidth(0.1);
-            gc.strokeRect(relativeX, relativeY, relativeWidth, relativeHeight);
         });
     }
 }

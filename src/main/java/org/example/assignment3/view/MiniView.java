@@ -58,7 +58,7 @@ public class MiniView extends DetailView{
                 gc.setFill(Color.LIGHTGRAY);
                 gc.fillRect(relativeX, relativeY, relativeWidth, relativeHeight);
                 gc.strokeRect(relativeX, relativeY, relativeWidth, relativeHeight);
-                gc.setLineWidth(1);
+                gc.setLineWidth(4.8);
                 portalDrawing(relativeX, relativeY, relativeWidth, relativeHeight, miniSclFctr, miniSightX, miniSightY, 1);
             }
         });

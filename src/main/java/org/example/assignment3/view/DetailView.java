@@ -63,7 +63,7 @@ public class DetailView extends Pane implements Subscriber {
                 gc.setStroke(Color.BLACK);
                 gc.strokeRect(X, Y, bx.getWidth(), bx.getHeight());
 
-                portalDrawing(X, Y, bx.getWidth(), bx.getHeight(), bx.getScaleFactor(), bx.getSightAtX(), bx.getSightAtY());
+                portalDrawing(X, Y, bx.getWidth(), bx.getHeight(), bx.getScaleFactor(), bx.getSightAtX(), bx.getSightAtY(), 1);
             }
 
             //the edge circles creation is here with a proper border too
@@ -91,27 +91,36 @@ public class DetailView extends Pane implements Subscriber {
         gc.strokeOval(X - imodel.edge + width, Y - imodel.edge, imodel.edge * 2, imodel.edge * 2);
     }
 
-    private void portalDrawing(double x, double y, double width, double height, double sclFctr, double Xsight, double Ysight){
+    private void portalDrawing(double x, double y, double width, double height, double sclFctr, double Xsight, double Ysight, int level){
         gc.save();
 
         gc.translate(x, y);
         gc.scale(sclFctr,sclFctr);
         gc.translate(-Xsight, -Ysight);
 
-        model.getObjects().forEach(inbx -> {
-            if (imodel.getSelected() == inbx) {
 
-                gc.setFill(Color.ORANGE);
-            } else {
-                gc.setFill(Color.BLUE);
-            }
+        model.getObjects().forEach(inbx -> {
 
             double innX = inbx.getX()- Xsight;
             double innY =inbx.getY()-Ysight;
 
-            gc.fillRect(innX, innY, Math.min(inbx.getWidth(),((width/sclFctr)-inbx.getX())), Math.min(inbx.getHeight(), ((height/sclFctr)-inbx.getY())));
-            gc.strokeRect(innX, innY, Math.min(inbx.getWidth(),((width/sclFctr)-inbx.getX())), Math.min(inbx.getHeight(), ((height/sclFctr)-inbx.getY())));
+            if (inbx.type()=="Box"){
+                if (imodel.getSelected() == inbx) {
 
+                    gc.setFill(Color.ORANGE);
+                } else {
+                    gc.setFill(Color.BLUE);
+                }
+                gc.fillRect(innX, innY, Math.min(inbx.getWidth(),((width/sclFctr)-inbx.getX())), Math.min(inbx.getHeight(), ((height/sclFctr)-inbx.getY())));
+                gc.strokeRect(innX, innY, Math.min(inbx.getWidth(),((width/sclFctr)-inbx.getX())), Math.min(inbx.getHeight(), ((height/sclFctr)-inbx.getY())));
+
+            } else if (inbx.type() == "Portal") {
+                gc.setFill(Color.LIGHTGRAY);
+                gc.fillRect(innX, innY, Math.min(inbx.getWidth(),((width/sclFctr)-inbx.getX())), Math.min(inbx.getHeight(), ((height/sclFctr)-inbx.getY())));
+                gc.strokeRect(innX, innY, Math.min(inbx.getWidth(),((width/sclFctr)-inbx.getX())), Math.min(inbx.getHeight(), ((height/sclFctr)-inbx.getY())));
+                if (level < 2)
+                    portalDrawing(x, y, inbx.getWidth(), inbx.getHeight(), inbx.getScaleFactor(), inbx.getSightAtX(), inbx.getSightAtY(), level + 1);
+            }
         });
         gc.restore();
     }

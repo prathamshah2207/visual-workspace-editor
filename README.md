@@ -61,22 +61,6 @@ Developed as part of **CMPT 381: GUI Programming**, this project demonstrates ad
 
 ---
 
-## 📂 Repository Structure
-
-/src
-└── main
-└── java
-└── org
-└── example
-└── assignment3
-├── EditorApp.java
-├── controller
-├── model
-├── view
-└── ui
-
----
-
 ## ▶️ How to Run
 
 1. Clone or download this repository.  
